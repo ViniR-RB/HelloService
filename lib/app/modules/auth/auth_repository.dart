@@ -1,22 +1,32 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 
-class AuthRepository {
-  Dio repository = Dio(BaseOptions(baseUrl: 'http://192.168.0.109:3001'));
-  login(Map<String, dynamic> user) async {
+import '../../core/services/intefaces/http_client.dart';
+
+abstract class AuthRepository {
+  Future login(String email, String password);
+}
+
+class AuthRepositoryImpl implements AuthRepository {
+  final HttpClient _repository;
+  AuthRepositoryImpl(this._repository);
+  @override
+  Future<Response<dynamic>> login(String email, String password) async {
+    final data = <String, dynamic>{'email': email, 'password': password};
     try {
-      final Response<dynamic> response = await repository.post('/auth/signin',
-          data: jsonEncode(user),
-          options: Options(headers: {
+      final response = await _repository.post(
+        '/auth/signin',
+        Options(
+          headers: {
             HttpHeaders.contentTypeHeader: 'application/json',
-          }));
+          },
+        ),
+        data,
+      );
       return response;
     } on DioError catch (e) {
-      Exception(e);
-    } catch (e) {
-      Exception(e);
+      throw Exception(e.message);
     }
   }
 }

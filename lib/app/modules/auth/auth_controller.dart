@@ -5,22 +5,27 @@ import 'package:app/app/core/models/user.dart';
 import 'package:app/app/modules/auth/auth_repository.dart';
 import 'package:dio/dio.dart';
 
-class AuthController {
+abstract class AuthController {
+  Future login(String email, String password);
+}
+
+class AuthControllerImpl implements AuthController {
   final AuthRepository repository;
 
-  AuthController({required this.repository});
+  AuthControllerImpl({required this.repository});
 
-  login(Map<String, dynamic> user) async {
+  @override
+  Future login(String email, String password) async {
     try {
-      final DatabaseConnect db = DatabaseConnect();
-      final Response<dynamic> response = await repository.login(user);
+      final db = DatabaseConnect();
+      final response = await repository.login(email, password);
 
-      bool isClient = false;
+      var isClient = false;
       final Map<String, dynamic> userData = response.data;
 
       if (userData['user Type'] == 'enterprise') {
         final User users = Enterprise.fromMap(userData);
-        final List<User> userList = await db.getUser();
+        final userList = await db.getUser();
 
         if (userList.isEmpty) {
           await db.insertUser(users);
@@ -39,7 +44,7 @@ class AuthController {
         isClient = true;
         final User users = Employer.fromMap(userData);
 
-        final List<User> userList = await db.getUser();
+        final userList = await db.getUser();
 
         if (userList.isEmpty) {
           await db.insertUser(users);
@@ -55,8 +60,8 @@ class AuthController {
 
         return isClient;
       }
-    } catch (e) {
-      throw Exception(e);
+    } on DioError catch (e) {
+      throw Exception(e.message);
     }
   }
 }

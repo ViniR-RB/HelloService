@@ -2,6 +2,7 @@ import 'package:app/app/modules/auth/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
+import '../../../core/utils/namedRoutes.dart';
 import '../../../core/utils/validator.dart';
 import '../../../core/widgets/snackbar_custom.dart';
 import '../widgets/auth_button.dart';
@@ -28,20 +29,20 @@ class _AuthPageState extends State<AuthPage> {
     _passwordcontroller.clear();
   }
 
-  void validatedForm() async {
+  Future<void> validatedForm() async {
     if (_formKey.currentState!.validate()) {
-      Map<String, dynamic> user = {
+      final user = <String, dynamic>{
         'email': _emailcontroller.text,
         'password': _passwordcontroller.text
       };
 
       try {
-        var response = await _controller.login(user);
+        final response = await _controller.login(user);
         ShowSnackBarError().showSnackBar(context);
         if (response == true) {
-          Modular.to.navigate('/home/prestador');
+          Modular.to.navigate(NamedRoutes.homeEmpresa);
         } else {
-          Modular.to.navigate('/home/empresa/');
+          Modular.to.navigate(NamedRoutes.homePrestador);
         }
       } catch (e) {
         print(e);
@@ -54,7 +55,7 @@ class _AuthPageState extends State<AuthPage> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(249, 238, 47, 1),
+        backgroundColor: const Color.fromRGBO(249, 238, 47, 1),
         leading: Image.asset(
           'assets/logo/logo.png',
           scale: 1.5,
@@ -74,10 +75,10 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 
-  body(Size size) {
+  SingleChildScrollView body(Size size) {
     return SingleChildScrollView(
       child: Padding(
-        padding: EdgeInsets.only(top: 100, bottom: 50),
+        padding: const EdgeInsets.only(top: 100, bottom: 50),
         child: Container(
           child: Column(
             children: [
@@ -101,16 +102,23 @@ class _AuthPageState extends State<AuthPage> {
                     child: Column(
                       children: [
                         const SizedBox(height: 30),
-                        field(size, Validator.validateEmail, _emailcontroller,
-                            'Email...', 'Email...', TextInputType.emailAddress),
-                        const SizedBox(height: 30.0),
                         field(
-                            size,
-                            Validator.validatepassword,
-                            _passwordcontroller,
-                            'Senha....',
-                            'Senha....',
-                            null),
+                          size,
+                          Validator.validateEmail,
+                          _emailcontroller,
+                          'Email...',
+                          'Email...',
+                          TextInputType.emailAddress,
+                        ),
+                        const SizedBox(height: 30),
+                        field(
+                          size,
+                          Validator.validatepassword,
+                          _passwordcontroller,
+                          'Senha....',
+                          'Senha....',
+                          null,
+                        ),
                       ],
                     ),
                   ),
@@ -131,7 +139,7 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 
-  _forgotPassword(size) {
+  GestureDetector _forgotPassword(size) {
     return GestureDetector(
       onTap: () {},
       child: Container(
@@ -141,7 +149,7 @@ class _AuthPageState extends State<AuthPage> {
           children: [
             Container(
               padding: const EdgeInsets.fromLTRB(0, 5, 40, 2),
-              child: Text(
+              child: const Text(
                 'Esqueceu a Senha',
                 style: TextStyle(
                   color: Colors.white,
@@ -155,7 +163,7 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 
-  field(
+  SizedBox field(
     size,
     String? Function(String?)? validator,
     controller,
@@ -163,7 +171,7 @@ class _AuthPageState extends State<AuthPage> {
     hintText,
     textInputType,
   ) {
-    return Container(
+    return SizedBox(
       height: size.height / 14,
       width: size.width / 1.2,
       child: TextFormField(
@@ -171,61 +179,61 @@ class _AuthPageState extends State<AuthPage> {
         controller: controller,
         keyboardType: textInputType,
         decoration: InputDecoration(
-          labelStyle: TextStyle(color: Colors.white),
+          labelStyle: const TextStyle(color: Colors.white),
           label: Text(label),
           hintText: hintText,
-          hintStyle: TextStyle(color: Colors.grey),
+          hintStyle: const TextStyle(color: Colors.grey),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20),
-            borderSide: BorderSide(color: Colors.white, width: 1),
+            borderSide: const BorderSide(color: Colors.white),
           ),
         ),
       ),
     );
   }
 
-  _entrar(size) {
-    return Container(
+  SizedBox _entrar(size) {
+    return SizedBox(
       height: size.height / 18,
       width: size.width / 1.2,
       child: TextButton(
         onPressed: () => {
           validatedForm(),
         },
-        child: Text(
-          'Entrar',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
         style: TextButton.styleFrom(
-          backgroundColor: Color.fromRGBO(54, 59, 107, 1),
+          backgroundColor: const Color.fromRGBO(54, 59, 107, 1),
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(20),
             ),
             side: BorderSide(
               color: Colors.white,
-              width: 1,
             ),
           ),
+        ),
+        child: const Text(
+          'Entrar',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
     );
   }
 
-  _title() {
+  Row _title() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: const [
         Text(
           'Conectar-se',
           style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Raleway',
-              fontSize: 36),
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Raleway',
+            fontSize: 36,
+          ),
         ),
       ],
     );
