@@ -37,7 +37,8 @@ class _AuthPageState extends State<AuthPage> {
       };
 
       try {
-        final response = await _controller.login(user);
+        final response = await _controller.login(
+            _emailcontroller.text, _passwordcontroller.text);
         ShowSnackBarError().showSnackBar(context);
         if (response == true) {
           Modular.to.navigate(NamedRoutes.homeEmpresa);

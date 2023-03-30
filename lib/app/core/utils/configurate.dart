@@ -5,5 +5,5 @@ abstract class ConfigurateEnv {
 
   static String get baseUrl => _get('BASE_URL');
 
-  static String _get(String name) => DotEnv().env[name] ?? '';
+  static String _get(String name) => dotenv.env[name] ?? 'Not Found';
 }

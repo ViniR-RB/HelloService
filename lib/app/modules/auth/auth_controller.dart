@@ -4,6 +4,7 @@ import 'package:app/app/core/models/enterprise.dart';
 import 'package:app/app/core/models/user.dart';
 import 'package:app/app/modules/auth/auth_repository.dart';
 import 'package:dio/dio.dart';
+import 'package:sqflite/sqflite.dart';
 
 abstract class AuthController {
   Future login(String email, String password);
