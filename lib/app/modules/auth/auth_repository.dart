@@ -3,9 +3,10 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 
 import '../../core/services/intefaces/http_client.dart';
+import 'erros/auth_erros.dart';
 
 abstract class AuthRepository {
-  Future login(String email, String password);
+  Future<Response<dynamic>> login(String email, String password);
 }
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -26,7 +27,10 @@ class AuthRepositoryImpl implements AuthRepository {
       );
       return response;
     } on DioError catch (e) {
-      throw Exception(e.message);
+      throw AuthErrorLogin(
+        message: e.response!.data['msg'],
+        statusCode: e.response?.statusCode ?? 0,
+      );
     }
   }
 }

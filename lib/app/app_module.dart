@@ -1,10 +1,10 @@
-import 'package:app/app/core/services/implements/http_client_impl.dart';
-import 'package:app/app/core/services/intefaces/http_client.dart';
-import 'package:app/app/core/utils/configurate.dart';
-import 'package:app/app/core/utils/namedRoutes.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
+import 'core/services/implements/http_client_impl.dart';
+import 'core/services/intefaces/http_client.dart';
+import 'core/utils/configurate.dart';
+import 'core/utils/namedRoutes.dart';
 import 'modules/auth/auth_module.dart';
 import 'modules/homeEmpresa/home_module.dart';
 import 'modules/homePrestador/home_module.dart';

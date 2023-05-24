@@ -1,10 +1,9 @@
-import 'package:app/app/modules/auth/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../core/utils/namedRoutes.dart';
 import '../../../core/utils/validator.dart';
-import '../../../core/widgets/snackbar_custom.dart';
+import '../auth_controller.dart';
 import '../widgets/auth_button.dart';
 
 class AuthPage extends StatefulWidget {
@@ -17,8 +16,6 @@ class AuthPage extends StatefulWidget {
 class _AuthPageState extends State<AuthPage> {
   final TextEditingController _emailcontroller = TextEditingController();
   final TextEditingController _passwordcontroller = TextEditingController();
-  // bool isnew = true;
-
   final _formKey = GlobalKey<FormState>();
   final AuthController _controller = Modular.get();
 
@@ -31,22 +28,16 @@ class _AuthPageState extends State<AuthPage> {
 
   Future<void> validatedForm() async {
     if (_formKey.currentState!.validate()) {
-      final user = <String, dynamic>{
-        'email': _emailcontroller.text,
-        'password': _passwordcontroller.text
-      };
-
-      try {
-        final response = await _controller.login(
-            _emailcontroller.text, _passwordcontroller.text);
-        ShowSnackBarError().showSnackBar(context);
-        if (response == true) {
-          Modular.to.navigate(NamedRoutes.homeEmpresa);
-        } else {
-          Modular.to.navigate(NamedRoutes.homePrestador);
-        }
-      } catch (e) {
-        print(e);
+      final response = await _controller.login(
+        _emailcontroller.text,
+        _passwordcontroller.text,
+        context,
+      );
+      if (response == null) {
+      } else if (response.type == 'employer') {
+        Modular.to.navigate(NamedRoutes.homePrestador);
+      } else if (response.type == 'enterprise') {
+        Modular.to.navigate(NamedRoutes.homeEmpresa);
       }
     }
   }
