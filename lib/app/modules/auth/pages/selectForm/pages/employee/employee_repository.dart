@@ -1,23 +1,31 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 
+import '../../../../../../core/services/intefaces/http_client.dart';
+import 'erros/employee_erros.dart';
+
 class PeopleFormRepository {
-  Dio repository = Dio(BaseOptions(baseUrl: 'http://10.30.54.148:3001'));
+  HttpClient repository;
+  PeopleFormRepository(this.repository);
+
   Future<Response> signInPeople(Map<String, dynamic> user) async {
     try {
       final response = await repository.post(
         '/auth/employee/signup/',
-        data: jsonEncode(user),
-        options: Options(
+        Options(
           headers: {
             HttpHeaders.contentTypeHeader: 'application/json',
           },
         ),
+        user,
       );
-      print('Response:  $response');
       return response;
+    } on DioError catch (e) {
+      throw EmployeeErrorEmailAlreadyExisting(
+        message: e.response!.data['msg'],
+        statusCode: e.response!.statusCode ?? 0,
+      );
     } catch (e) {
       throw Exception(e);
     }

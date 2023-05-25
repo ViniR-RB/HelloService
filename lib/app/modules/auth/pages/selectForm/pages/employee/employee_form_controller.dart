@@ -1,23 +1,28 @@
-import 'package:app/app/core/models/employer.dart';
-import 'package:app/app/modules/auth/pages/selectForm/pages/employer/peopleForm_repository.dart';
-import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../../../../../../core/db/db.dart';
+import '../../../../../../core/models/employer.dart';
 import '../../../../../../core/models/user.dart';
+import '../../../../../../core/widgets/snackbar_custom.dart';
+import 'employee_repository.dart';
+import 'erros/employee_erros.dart';
 
 class PeopleFormController {
   final PeopleFormRepository repository;
 
   PeopleFormController({required this.repository});
 
-  signInPeople(Map<String, dynamic> user) async {
+  Future<User?> signInPeople(
+    Map<String, dynamic> user,
+    BuildContext context,
+  ) async {
     try {
-      final Response<dynamic> response = await repository.signInPeople(user);
-      final DatabaseConnect db = DatabaseConnect();
+      final response = await repository.signInPeople(user);
+      final db = DatabaseConnect();
       final Map<String, dynamic> userData = response.data;
       final User users = Employer.fromMap(userData);
-      print(users.type);
-      final List<User> userList = await db.getUser();
+
+      final userList = await db.getUser();
 
       if (userList.isEmpty) {
         await db.insertUser(users);
@@ -30,9 +35,11 @@ class PeopleFormController {
           await db.insertUser(users);
         }
       }
-      return response;
-    } catch (e) {
-      throw Exception(e);
+      return users;
+    } on EmployeeErrorEmailAlreadyExisting catch (e) {
+      ShowSnackBarError(content: e.message, label: 'Continuar', onTap: () {})
+          .showSnackBar(context);
+      return null;
     }
   }
 }

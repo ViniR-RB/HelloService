@@ -1,9 +1,7 @@
-import 'package:app/app/modules/auth/pages/selectForm/pages/enterprise/enterprise_controller.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+
+import '../enterprise_controller.dart';
 
 class EnterprisePage extends StatefulWidget {
   const EnterprisePage({Key? key}) : super(key: key);
@@ -40,16 +38,10 @@ class _FormFactoryPageState extends State<EnterprisePage> {
   final TextEditingController _cidadeController = TextEditingController();
   final TextEditingController _descripitionController = TextEditingController();
   final EnterpriseController _controller = Modular.get();
-  void validatedForm() async {
+
+  Future<void> validatedForm() async {
     if (_formKey.currentState!.validate()) {
-      final snackBar = SnackBar(
-        content: const Text('Email inválido, tente outro'),
-        action: SnackBarAction(
-          label: 'Continuar',
-          onPressed: () {},
-        ),
-      );
-      Map<String, dynamic> user = {
+      final user = <String, dynamic>{
         'username': _usenameController.text,
         'first_name': _firstnameController.text,
         // 'last_name': _lastnameController.text,
@@ -64,12 +56,10 @@ class _FormFactoryPageState extends State<EnterprisePage> {
         'cyte': _cidadeController.text,
         'cnpj': _cnpjController.text,
       };
-      try {
-        final Response<dynamic> response =
-            await _controller.signInFactory(user);
+
+      final response = await _controller.signInEnterprise(user, context);
+      if (response != null) {
         Modular.to.navigate('/home/empresa');
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     }
   }
@@ -81,9 +71,9 @@ class _FormFactoryPageState extends State<EnterprisePage> {
     );
   }
 
-  _body() {
+  SingleChildScrollView _body() {
     return SingleChildScrollView(
-      child: Container(
+      child: SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Container(
@@ -94,92 +84,112 @@ class _FormFactoryPageState extends State<EnterprisePage> {
               child: Column(
                 children: [
                   Expanded(
-                    child: Container(
-                      child: Column(
-                        children: [
-                          Padding(padding: EdgeInsets.only(top: 100)),
-                          Text(
-                            'Conte Nós Mais Sobre Sua Empresa',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
+                    child: Column(
+                      children: [
+                        const Padding(padding: EdgeInsets.only(top: 100)),
+                        const Text(
+                          'Conte Nós Mais Sobre Sua Empresa',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
-                          Padding(padding: EdgeInsets.only(top: 20)),
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.all(0),
-                              width: MediaQuery.of(context).size.width,
-                              decoration: BoxDecoration(
-                                color: Color.fromRGBO(54, 59, 107, 1),
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(0),
-                                ),
-                              ),
-                              child: ListView(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 8),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Form(
-                                          key: _formKey,
-                                          child: Column(
-                                            children: [
-                                              _fields('User Name:', 'User Name',
-                                                  _usenameController),
-                                              _fields(
-                                                  'Primeiro Nome:',
-                                                  'Matheus',
-                                                  _firstnameController),
-                                              // _fields('Segundo Nome:', 'Levi',
-                                              //     _lastnameController),
-                                              _fields('Email', 'a@a.com.br',
-                                                  _emailController),
-                                              _fields('Senha', '@dsahu3214',
-                                                  _passwordController),
-                                              _fields(
-                                                  'Celular (com DD):',
-                                                  '00 00000-0000',
-                                                  _telefoneController),
-                                              _fields('Cep:', '00000-000',
-                                                  _cepController),
-                                              _fields('Estado:', 'Piaui',
-                                                  _estadoController),
-                                              _fields('Cidade:', 'Teresina',
-                                                  _cidadeController),
-                                              _fields(
-                                                  'CNPJ:',
-                                                  'XX.XXX.XXX/0001-XX',
-                                                  _cnpjController),
-                                              _fields(
-                                                  'Descrição:',
-                                                  'Focado, Determinando',
-                                                  _descripitionController),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  button(
-                                                    'Confirmar',
-                                                    () => validatedForm(),
-                                                  ),
-                                                  button('Voltar',
-                                                      () => Modular.to.pop()),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
+                        ),
+                        const Padding(padding: EdgeInsets.only(top: 20)),
+                        Expanded(
+                          child: Container(
+                            padding: EdgeInsets.zero,
+                            width: MediaQuery.of(context).size.width,
+                            decoration: const BoxDecoration(
+                              color: Color.fromRGBO(54, 59, 107, 1),
+                              borderRadius: BorderRadius.zero,
                             ),
-                          )
-                        ],
-                      ),
+                            child: ListView(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8),
+                                  child: Column(
+                                    children: [
+                                      Form(
+                                        key: _formKey,
+                                        child: Column(
+                                          children: [
+                                            _fields(
+                                              'User Name:',
+                                              'User Name',
+                                              _usenameController,
+                                            ),
+                                            _fields(
+                                              'Primeiro Nome:',
+                                              'Matheus',
+                                              _firstnameController,
+                                            ),
+                                            // _fields('Segundo Nome:', 'Levi',
+                                            //     _lastnameController),
+                                            _fields(
+                                              'Email',
+                                              'a@a.com.br',
+                                              _emailController,
+                                            ),
+                                            _fields(
+                                              'Senha',
+                                              '@dsahu3214',
+                                              _passwordController,
+                                            ),
+                                            _fields(
+                                              'Celular (com DD):',
+                                              '00 00000-0000',
+                                              _telefoneController,
+                                            ),
+                                            _fields(
+                                              'Cep:',
+                                              '00000-000',
+                                              _cepController,
+                                            ),
+                                            _fields(
+                                              'Estado:',
+                                              'Piaui',
+                                              _estadoController,
+                                            ),
+                                            _fields(
+                                              'Cidade:',
+                                              'Teresina',
+                                              _cidadeController,
+                                            ),
+                                            _fields(
+                                              'CNPJ:',
+                                              'XX.XXX.XXX/0001-XX',
+                                              _cnpjController,
+                                            ),
+                                            _fields(
+                                              'Descrição:',
+                                              'Focado, Determinando',
+                                              _descripitionController,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                button(
+                                                  'Confirmar',
+                                                  validatedForm,
+                                                ),
+                                                button(
+                                                  'Voltar',
+                                                  () => Modular.to.pop(),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   )
                 ],
@@ -191,19 +201,19 @@ class _FormFactoryPageState extends State<EnterprisePage> {
     );
   }
 
-  button(String label, Function() onPressed) {
+  Padding button(String label, Function() onPressed) {
     return Padding(
       padding: const EdgeInsets.only(top: 12, left: 16, bottom: 12),
       child: TextButton(
         style: TextButton.styleFrom(
-          textStyle: TextStyle(color: Color.fromRGBO(54, 59, 107, 1)),
+          textStyle: const TextStyle(color: Color.fromRGBO(54, 59, 107, 1)),
           side: BorderSide.none,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(12),
             ),
           ),
-          backgroundColor: Color.fromRGBO(249, 238, 47, 1),
+          backgroundColor: const Color.fromRGBO(249, 238, 47, 1),
         ),
         onPressed: onPressed,
         child: Text(label),
@@ -211,7 +221,7 @@ class _FormFactoryPageState extends State<EnterprisePage> {
     );
   }
 
-  field(
+  Container field(
     size,
     String? Function(String?)? validator,
     controller,
@@ -220,7 +230,7 @@ class _FormFactoryPageState extends State<EnterprisePage> {
     textInputType,
   ) {
     return Container(
-      color: Color.fromRGBO(48, 48, 48, 1),
+      color: const Color.fromRGBO(48, 48, 48, 1),
       height: size.height / 14,
       width: size.width / 1.2,
       child: TextFormField(
@@ -233,35 +243,32 @@ class _FormFactoryPageState extends State<EnterprisePage> {
           hintText: hintText,
           hintStyle: const TextStyle(color: Colors.white),
           border: const OutlineInputBorder(
-            borderSide:
-                BorderSide(color: Color.fromRGBO(48, 48, 48, 1), width: 1),
+            borderSide: BorderSide(color: Color.fromRGBO(48, 48, 48, 1)),
           ),
           enabledBorder: const OutlineInputBorder(
-            borderSide:
-                BorderSide(color: Color.fromRGBO(48, 48, 48, 1), width: 1),
+            borderSide: BorderSide(color: Color.fromRGBO(48, 48, 48, 1)),
           ),
         ),
       ),
     );
   }
 
-  _fields(String title, label, TextEditingController controller) {
+  Column _fields(String title, label, TextEditingController controller) {
     return Column(
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(padding: EdgeInsets.only(left: 22.0, top: 12)),
+            const Padding(padding: EdgeInsets.only(left: 22, top: 12)),
             Text(
-              '$title',
-              style: TextStyle(
+              title,
+              style: const TextStyle(
                 fontFamily: 'MavenPro',
                 fontWeight: FontWeight.bold,
               ),
             ),
           ],
         ),
-        const Padding(padding: EdgeInsets.only(top: 12.0, bottom: 0)),
+        const Padding(padding: EdgeInsets.only(top: 12)),
         field(
           MediaQuery.of(context).size,
           (p0) => null,

@@ -1,20 +1,31 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 
+import '../../../../../../core/services/intefaces/http_client.dart';
+import 'erros/enterprise_erros.dart';
+
 class EnterpriseRepository {
-  Dio repository = Dio(BaseOptions(baseUrl: 'http://192.168.0.109:3001'));
-  signInFactory(Map<String, dynamic> user) async {
+  HttpClient repository;
+  EnterpriseRepository(this.repository);
+
+  Future<Response> signInFactory(Map<String, dynamic> user) async {
     try {
-      final Response<dynamic> response =
-          await repository.post('/auth/enterprise/signup',
-              data: jsonEncode(user),
-              options: Options(headers: {
-                HttpHeaders.contentTypeHeader: 'application/json',
-              }));
-      print('Response:  $response');
+      final response = await repository.post(
+        '/auth/enterprise/signup',
+        Options(
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json',
+          },
+        ),
+        user,
+      );
       return response;
+    } on DioError catch (e) {
+      throw EnterPriseErrorEmailAlreadyExisting(
+        message: e.response!.data['msg'],
+        statusCode: e.response!.statusCode ?? 0,
+      );
     } catch (e) {
       throw Exception(e);
     }
