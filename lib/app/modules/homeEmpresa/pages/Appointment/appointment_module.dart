@@ -7,14 +7,16 @@ import 'pages/appointment_page.dart';
 class AppointmentModule extends Module {
   @override
   final List<Bind> binds = [
-    Bind((i) => AppointmentRepository()),
+    Bind((i) => AppointmentRepository(i.get())),
     Bind((i) => AppointmentController(repository: i.get())),
   ];
 
   @override
   final List<ModularRoute> routes = [
-    ChildRoute(Modular.initialRoute,
-        child: (_, args) => const AppointmentPage()),
+    ChildRoute(
+      Modular.initialRoute,
+      child: (_, args) => const AppointmentPage(),
+    ),
     // ModuleRoute('/perfilempresa', module: PerfilEmpresaModule()),
   ];
 }

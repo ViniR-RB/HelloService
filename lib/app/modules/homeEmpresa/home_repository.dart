@@ -3,20 +3,25 @@ import 'dart:io';
 import 'package:app/app/core/db/db.dart';
 import 'package:dio/dio.dart';
 
+import '../../core/services/intefaces/http_client.dart';
+
 class HomeRepository {
-  Dio repository = Dio(BaseOptions(baseUrl: 'http://192.168.0.109:3001'));
+  final HttpClient _repository;
+  HomeRepository(this._repository);
   final DatabaseConnect db = DatabaseConnect();
 
   Future<Response<dynamic>> listAllEmployeer() async {
     final user = await db.getUser();
-    final String token = user[0].webtoken.toString();
+    final token = user[0].webtoken;
     try {
-      final Response<dynamic> response = await repository.get(
+      final response = await _repository.get(
         '/auth/signin/enterprise/home/listalllemployeers',
-        options: Options(headers: {
-          HttpHeaders.contentTypeHeader: 'application/json',
-          HttpHeaders.authorizationHeader: 'Bearer $token'
-        }),
+        Options(
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.authorizationHeader: 'Bearer $token'
+          },
+        ),
       );
       return response;
     } catch (e) {

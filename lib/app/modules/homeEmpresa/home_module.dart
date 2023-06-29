@@ -9,14 +9,16 @@ import 'pages/home_page.dart';
 class HomeEmpresaModule extends Module {
   @override
   final List<Bind> binds = [
-    Bind((i) => HomeRepository()),
+    Bind((i) => HomeRepository(i.get())),
     Bind((i) => HomeController(repository: i.get())),
   ];
 
   @override
   final List<ModularRoute> routes = [
-    ChildRoute(Modular.initialRoute,
-        child: (_, args) => const HomeEmpresaPage()),
+    ChildRoute(
+      Modular.initialRoute,
+      child: (_, args) => const HomeEmpresaPage(),
+    ),
     ModuleRoute('/perfilempresa', module: PerfilEmpresaModule()),
     ModuleRoute('/appointment', module: AppointmentModule()),
   ];

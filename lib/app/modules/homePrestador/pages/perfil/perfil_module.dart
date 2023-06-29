@@ -1,4 +1,4 @@
-import 'package:app/app/modules/homePrestador/pages/perfil/pages/listAppointment/listAppointment_module.dart';
+import 'package:app/app/modules/homePrestador/pages/perfil/pages/listAppointment/list_appointment_module.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import 'pages/perfil_page.dart';
