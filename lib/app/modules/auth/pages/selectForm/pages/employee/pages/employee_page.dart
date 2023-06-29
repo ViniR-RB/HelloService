@@ -1,6 +1,7 @@
-import 'package:app/app/modules/auth/pages/selectForm/pages/employer/peopleForm_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+
+import '../employee_form_controller.dart';
 
 class FormPeoplePage extends StatefulWidget {
   const FormPeoplePage({Key? key}) : super(key: key);
@@ -38,7 +39,7 @@ class _FormPeoplePageState extends State<FormPeoplePage> {
 
   final PeopleFormController _controller = Modular.get();
 
-  void validatedForm() async {
+  Future<void> validatedForm() async {
     if (_formKey.currentState!.validate()) {
       final snackBar = SnackBar(
         content: const Text('Email inválido, tente outro'),
@@ -47,7 +48,7 @@ class _FormPeoplePageState extends State<FormPeoplePage> {
           onPressed: () {},
         ),
       );
-      Map<String, dynamic> user = {
+      final user = <String, dynamic>{
         'username': _usenameController.value.text,
         'first_name': _firstnameController.text,
         'last_name': _lastnameController.text,
@@ -62,17 +63,11 @@ class _FormPeoplePageState extends State<FormPeoplePage> {
         'cyte': _cidadeController.value.text,
         'cpf': _cpfController.value.text,
       };
-      try {
-        final dynamic response = await _controller.signInPeople(user);
-        // isnew = false;
-        // isnew
-        // ? Modular.to.navigate('/home/')
-        // : Modular.to.navigate('/auth/selectform');
 
+      final response = await _controller.signInPeople(user, context);
+
+      if (response != null) {
         Modular.to.navigate('/home/prestador');
-      } catch (e) {
-        print(e);
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     }
   }
@@ -85,13 +80,12 @@ class _FormPeoplePageState extends State<FormPeoplePage> {
     );
   }
 
-  _body(size) {
+  SingleChildScrollView _body(size) {
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Padding(padding: EdgeInsets.all(24)),
+          const Padding(padding: EdgeInsets.all(24)),
           _title('Finalize seu cadastro'),
           Form(
             key: _formKey,
@@ -111,14 +105,14 @@ class _FormPeoplePageState extends State<FormPeoplePage> {
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buttonFinish(size, () => validatedForm(), 'Finalizar'),
-              SizedBox(
+              _buttonFinish(size, validatedForm, 'Finalizar'),
+              const SizedBox(
                 width: 20,
               ),
               _buttonFinish(size, () => Modular.to.pop('/selectform'), 'Voltar')
@@ -129,7 +123,7 @@ class _FormPeoplePageState extends State<FormPeoplePage> {
     );
   }
 
-  _field(Size size, TextEditingController controller, labelText) {
+  Container _field(Size size, TextEditingController controller, labelText) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       child: TextFormField(
@@ -148,34 +142,28 @@ class _FormPeoplePageState extends State<FormPeoplePage> {
     );
   }
 
-  _title(String text) {
+  Row _title(String text) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
           text,
           style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Raleway',
-              fontSize: 36),
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Raleway',
+            fontSize: 36,
+          ),
         ),
       ],
     );
   }
 
-  _buttonFinish(Size size, onpressed, label) {
-    return Container(
+  Widget _buttonFinish(Size size, onpressed, label) {
+    return SizedBox(
       width: size.width / 2.5,
       child: TextButton(
         onPressed: onpressed,
-        child: Text(
-          label,
-          style: TextStyle(
-            fontFamily: 'Raleway',
-            fontWeight: FontWeight.bold,
-          ),
-        ),
         style: TextButton.styleFrom(
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
@@ -183,8 +171,14 @@ class _FormPeoplePageState extends State<FormPeoplePage> {
             ),
             side: BorderSide(
               color: Color.fromRGBO(82, 163, 208, 1),
-              width: 1,
             ),
+          ),
+        ),
+        child: Text(
+          label,
+          style: const TextStyle(
+            fontFamily: 'Raleway',
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),

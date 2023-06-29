@@ -1,7 +1,8 @@
-import 'package:app/app/modules/homePrestador/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:rx_notifier/rx_notifier.dart';
+
+import '../home_controller.dart';
 
 class HomePrestadorPage extends StatefulWidget {
   const HomePrestadorPage({Key? key}) : super(key: key);
@@ -33,47 +34,50 @@ class _HomePageState extends State<HomePrestadorPage> {
           },
         ),
       );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
     }
   }
 
   Future<void> selectWork(String worktype) {
     return showDialog<void>(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Deseja Ser $worktype?'),
-            actions: [
-              TextButton(
-                style: TextButton.styleFrom(
-                  textStyle: Theme.of(context).textTheme.labelLarge,
-                ),
-                child: const Text('Não'),
-                onPressed: () {
-                  Modular.to.pop();
-                },
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Deseja Ser $worktype?'),
+          actions: [
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
               ),
-              TextButton(
-                style: TextButton.styleFrom(
-                  textStyle: Theme.of(context).textTheme.labelLarge,
-                ),
-                child: const Text('Sim,Quero'),
-                onPressed: () async {
-                  _controller.addwork(worktype);
-                  Modular.to.pop();
-                  final snackBar = SnackBar(
-                    content: const Text('Trabalho Adicionado com Sucesso'),
-                    action: SnackBarAction(
-                      label: 'Continuar',
-                      onPressed: () {},
-                    ),
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                },
+              child: const Text('Não'),
+              onPressed: () {
+                Modular.to.pop();
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
               ),
-            ],
-          );
-        });
+              child: const Text('Sim,Quero'),
+              onPressed: () async {
+                _controller.addwork(worktype);
+                Modular.to.pop();
+                final snackBar = SnackBar(
+                  content: const Text('Trabalho Adicionado com Sucesso'),
+                  action: SnackBarAction(
+                    label: 'Continuar',
+                    onPressed: () {},
+                  ),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -84,13 +88,14 @@ class _HomePageState extends State<HomePrestadorPage> {
       appBar: AppBar(
         actions: [
           IconButton(
-              onPressed: () => Modular.to.pushNamed('/home/prestador/perfil/'),
-              icon: Icon(
-                Icons.settings,
-                color: Colors.black,
-              ))
+            onPressed: () => Modular.to.pushNamed('/home/prestador/perfil/'),
+            icon: const Icon(
+              Icons.settings,
+              color: Colors.black,
+            ),
+          )
         ],
-        backgroundColor: Color.fromRGBO(249, 238, 47, 1),
+        backgroundColor: const Color.fromRGBO(249, 238, 47, 1),
         leading: Image.asset(
           'assets/logo/logo.png',
           scale: 1.5,
@@ -109,11 +114,10 @@ class _HomePageState extends State<HomePrestadorPage> {
     );
   }
 
-  _body(double height, double width) {
+  SingleChildScrollView _body(double height, double width) {
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
             margin: const EdgeInsets.fromLTRB(0, 12, 0, 0),
@@ -122,18 +126,20 @@ class _HomePageState extends State<HomePrestadorPage> {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ),
-          RxBuilder(builder: (context) {
-            return Container(
-              padding: EdgeInsets.all(8),
-              height: height * 0.8,
-              child: GridView.builder(
+          RxBuilder(
+            builder: (context) {
+              return Container(
+                padding: const EdgeInsets.all(8),
+                height: height * 0.8,
+                child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      crossAxisSpacing: 18.0,
-                      mainAxisSpacing: 18.0,
-                      maxCrossAxisExtent: height * 0.3,
-                      mainAxisExtent: height * .22),
+                    crossAxisSpacing: 18,
+                    mainAxisSpacing: 18,
+                    maxCrossAxisExtent: height * 0.3,
+                    mainAxisExtent: height * .22,
+                  ),
                   itemCount: workList.value.length,
-                  itemBuilder: ((context, index) {
+                  itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () =>
                           selectWork('${workList.value[index]['work']}'),
@@ -146,14 +152,13 @@ class _HomePageState extends State<HomePrestadorPage> {
                               BoxShadow(
                                 color: Colors.black54,
                                 blurRadius: 4,
-                                offset: Offset(0.0, 0.75),
+                                offset: Offset(0, 0.75),
                               ),
                             ],
                             borderRadius: BorderRadius.all(
                               Radius.circular(10),
                             ),
                             color: Colors.indigo,
-                            shape: BoxShape.rectangle,
                           ),
                           child: Center(
                             child: Column(
@@ -162,20 +167,24 @@ class _HomePageState extends State<HomePrestadorPage> {
                                 Text(
                                   workList.value[index]['work'],
                                   style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                                 Text(
-                                    'Preço:R\$ ${workList.value[index]['price']}')
+                                  'Preço:R\$ ${workList.value[index]['price']}',
+                                )
                               ],
                             ),
                           ),
                         ),
                       ),
                     );
-                  })),
-            );
-          })
+                  },
+                ),
+              );
+            },
+          )
         ],
       ),
     );

@@ -1,22 +1,27 @@
-import 'package:app/app/core/models/enterprise.dart';
-import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 
 import '../../../../../../core/db/db.dart';
+import '../../../../../../core/models/enterprise.dart';
 import '../../../../../../core/models/user.dart';
+import '../../../../../../core/widgets/snackbar_custom.dart';
 import 'enterprise_repository.dart';
+import 'erros/enterprise_erros.dart';
 
 class EnterpriseController {
   final EnterpriseRepository repository;
 
   EnterpriseController({required this.repository});
 
-  signInFactory(Map<String, dynamic> user) async {
+  Future<User?> signInEnterprise(
+    Map<String, dynamic> user,
+    BuildContext context,
+  ) async {
     try {
-      final Response<dynamic> response = await repository.signInFactory(user);
-      final DatabaseConnect db = DatabaseConnect();
+      final response = await repository.signInFactory(user);
+      final db = DatabaseConnect();
       final Map<String, dynamic> userData = response.data;
       final User users = Enterprise.fromMap(userData);
-      final List<User> userList = await db.getUser();
+      final userList = await db.getUser();
 
       if (userList.isEmpty) {
         await db.insertUser(users);
@@ -29,10 +34,11 @@ class EnterpriseController {
           await db.insertUser(users);
         }
       }
-      return response;
-    } catch (e) {
-      print(e);
-      throw Exception(e);
+      return users;
+    } on EnterPriseErrorEmailAlreadyExisting catch (e) {
+      ShowSnackBarError(content: e.message, label: 'Continuar', onTap: () {})
+          .showSnackBar(context);
     }
+    return null;
   }
 }

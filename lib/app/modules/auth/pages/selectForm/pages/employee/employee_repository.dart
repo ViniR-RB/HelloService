@@ -3,16 +3,16 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 
 import '../../../../../../core/services/intefaces/http_client.dart';
-import 'erros/enterprise_erros.dart';
+import 'erros/employee_erros.dart';
 
-class EnterpriseRepository {
+class PeopleFormRepository {
   HttpClient repository;
-  EnterpriseRepository(this.repository);
+  PeopleFormRepository(this.repository);
 
-  Future<Response> signInFactory(Map<String, dynamic> user) async {
+  Future<Response> signInPeople(Map<String, dynamic> user) async {
     try {
       final response = await repository.post(
-        '/auth/enterprise/signup',
+        '/auth/employee/signup/',
         Options(
           headers: {
             HttpHeaders.contentTypeHeader: 'application/json',
@@ -22,7 +22,7 @@ class EnterpriseRepository {
       );
       return response;
     } on DioError catch (e) {
-      throw EnterPriseErrorEmailAlreadyExisting(
+      throw EmployeeErrorEmailAlreadyExisting(
         message: e.response!.data['msg'],
         statusCode: e.response!.statusCode ?? 0,
       );

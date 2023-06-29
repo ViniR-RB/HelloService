@@ -1,10 +1,10 @@
-import 'package:app/app/modules/homeEmpresa/pages/Appointment/appointment_module.dart';
-import 'package:app/app/modules/homeEmpresa/pages/perfil/perfil_module.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import 'home_controller.dart';
 import 'home_repository.dart';
+import 'pages/Appointment/appointment_module.dart';
 import 'pages/home_page.dart';
+import 'pages/perfil/perfil_module.dart';
 
 class HomeEmpresaModule extends Module {
   @override

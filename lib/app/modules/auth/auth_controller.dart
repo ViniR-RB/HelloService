@@ -1,12 +1,15 @@
-import 'package:app/app/core/db/db.dart';
-import 'package:app/app/core/models/employer.dart';
-import 'package:app/app/core/models/enterprise.dart';
-import 'package:app/app/core/models/user.dart';
-import 'package:app/app/modules/auth/auth_repository.dart';
-import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+
+import '../../core/db/db.dart';
+import '../../core/models/employer.dart';
+import '../../core/models/enterprise.dart';
+import '../../core/models/user.dart';
+import '../../core/widgets/snackbar_custom.dart';
+import 'auth_repository.dart';
+import 'erros/auth_erros.dart';
 
 abstract class AuthController {
-  Future login(String email, String password);
+  Future<User?> login(String email, String password, BuildContext context);
 }
 
 class AuthControllerImpl implements AuthController {
@@ -15,53 +18,46 @@ class AuthControllerImpl implements AuthController {
   AuthControllerImpl({required this.repository});
 
   @override
-  Future login(String email, String password) async {
+  Future<User?> login(
+    String email,
+    String password,
+    BuildContext context,
+  ) async {
     try {
-      final db = DatabaseConnect();
       final response = await repository.login(email, password);
 
-      var isClient = false;
       final Map<String, dynamic> userData = response.data;
 
+      final db = DatabaseConnect();
+
       if (userData['user Type'] == 'enterprise') {
-        final User users = Enterprise.fromMap(userData);
+        final User user = Enterprise.fromMap(userData);
         final userList = await db.getUser();
 
-        if (userList.isEmpty) {
-          await db.insertUser(users);
+        if (userList.isNotEmpty) {
+          await db.deleteToken(userList[0].id);
+          await db.insertUser(user);
         } else {
-          if (users.id != userList[0].id) {
-            await db.deleteToken(userList[0].id);
-            await db.insertUser(users);
-          } else {
-            await db.deleteToken(users.id);
-            await db.insertUser(users);
-          }
+          await db.insertUser(user);
         }
 
-        return isClient;
+        return user;
       } else {
-        isClient = true;
-        final User users = Employer.fromMap(userData);
+        final User user = Employer.fromMap(userData);
 
         final userList = await db.getUser();
-
-        if (userList.isEmpty) {
-          await db.insertUser(users);
+        if (userList.isNotEmpty) {
+          await db.deleteToken(userList[0].id);
+          await db.insertUser(user);
         } else {
-          if (users.id != userList[0].id) {
-            await db.deleteToken(userList[0].id);
-            await db.insertUser(users);
-          } else {
-            await db.deleteToken(users.id);
-            await db.insertUser(users);
-          }
+          await db.insertUser(user);
         }
-
-        return isClient;
+        return user;
       }
-    } on DioError catch (e) {
-      throw Exception(e.message);
+    } on AuthErrorLogin catch (e) {
+      ShowSnackBarError(content: e.message, label: 'Continuar', onTap: () {})
+          .showSnackBar(context);
+      return null;
     }
   }
 }

@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:app/app/core/db/db.dart';
 import 'package:dio/dio.dart';
 
+import '../../core/db/db.dart';
 import '../../core/services/intefaces/http_client.dart';
 
 class HomeRepository {

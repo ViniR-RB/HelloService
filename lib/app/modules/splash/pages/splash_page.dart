@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../core/db/db.dart';
-import '../../../core/models/user.dart';
+import '../../../core/utils/namedRoutes.dart';
 
 class SplashPage extends StatefulWidget {
-  SplashPage({super.key});
+  const SplashPage({super.key});
 
   @override
   State<SplashPage> createState() => _SplashPageState();
@@ -15,21 +15,24 @@ class _SplashPageState extends State<SplashPage> {
   bool teste = true;
   final DatabaseConnect db = DatabaseConnect();
   validarToken() async {
-    final List<User> userList = await db.getUser();
+    final userList = await db.getUser();
+    print(userList[0]);
     if (userList.isEmpty) {
-      final Future<Set<void>> duration = Future.delayed(
-          const Duration(seconds: 2),
-          () => {
-                Modular.to.navigate('/auth/'),
-              });
-    } else if (userList[0].type == 'employee') {
-      var duration = Future.delayed(
-          const Duration(seconds: 2),
-          () => {
-                Modular.to.navigate('/home/prestador/'),
-              });
+      final duration = Future<Set<void>>.delayed(
+        const Duration(seconds: 2),
+        () => {
+          Modular.to.navigate('/auth/'),
+        },
+      );
+    } else if (userList[0].type == 'enterprise') {
+      Modular.to.navigate(NamedRoutes.homeEmpresa);
+    } else if (userList[0].type == 'employer') {
+      final duration = Future.delayed(
+        const Duration(seconds: 2),
+        () => {Modular.to.navigate(NamedRoutes.homePrestador)},
+      );
     } else {
-      var duration = Future.delayed(
+      final duration = Future.delayed(
         const Duration(seconds: 2),
         () => Modular.to.navigate('/home/empresa/'),
       );
@@ -45,13 +48,14 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color.fromRGBO(249, 238, 47, 1), body: _body());
+      backgroundColor: const Color.fromRGBO(249, 238, 47, 1),
+      body: _body(),
+    );
   }
 
-  _body() {
+  Column _body() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [Center(child: Image.asset('assets/logo/logo.png'))],
     );
   }
