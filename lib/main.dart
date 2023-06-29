@@ -7,7 +7,6 @@ import 'app/app_widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // ignore: avoid_redundant_argument_values
-  await dotenv.load(fileName: '.env');
+  await dotenv.load();
   runApp(ModularApp(module: AppModule(), child: const AppWidget()));
 }

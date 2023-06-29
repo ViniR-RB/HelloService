@@ -240,8 +240,6 @@ class _FormFactoryPageState extends State<EnterprisePage> {
         decoration: InputDecoration(
           labelStyle: const TextStyle(color: Colors.grey),
           label: Text(label),
-          hintText: hintText,
-          hintStyle: const TextStyle(color: Colors.white),
           border: const OutlineInputBorder(
             borderSide: BorderSide(color: Color.fromRGBO(48, 48, 48, 1)),
           ),

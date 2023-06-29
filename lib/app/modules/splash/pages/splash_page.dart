@@ -16,7 +16,6 @@ class _SplashPageState extends State<SplashPage> {
   final DatabaseConnect db = DatabaseConnect();
   validarToken() async {
     final userList = await db.getUser();
-    print(userList[0]);
     if (userList.isEmpty) {
       final duration = Future<Set<void>>.delayed(
         const Duration(seconds: 2),
