@@ -47,18 +47,18 @@ class _HomePageState extends State<HomeEmpresaPage> {
     );
   }
 
-  _appBar() {
+  AppBar _appBar() {
     return AppBar(
       actions: [
         IconButton(
-            onPressed: () =>
-                Modular.to.pushNamed('/home/empresa/perfilempresa'),
-            icon: const Icon(
-              Icons.settings,
-              color: Colors.black,
-            ))
+          onPressed: () => Modular.to.pushNamed('/home/empresa/perfilempresa'),
+          icon: const Icon(
+            Icons.settings,
+            color: Colors.black,
+          ),
+        )
       ],
-      backgroundColor: Color.fromRGBO(249, 238, 47, 1),
+      backgroundColor: const Color.fromRGBO(249, 238, 47, 1),
       leading: Image.asset(
         'assets/logo/logo.png',
         scale: 1.5,
@@ -75,13 +75,13 @@ class _HomePageState extends State<HomeEmpresaPage> {
     );
   }
 
-  _body() {
+  SingleChildScrollView _body() {
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            margin: EdgeInsets.fromLTRB(0, 12, 0, 0),
+            margin: const EdgeInsets.fromLTRB(0, 12, 0, 0),
             child: const Text(
               'Lista de Funcionários Disponíveis',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -91,19 +91,21 @@ class _HomePageState extends State<HomeEmpresaPage> {
             builder: (context) {
               return listaUser.value.isEmpty
                   ? const Center(child: CircularProgressIndicator())
-                  : Container(
+                  : SizedBox(
                       height: MediaQuery.of(context).size.height,
                       child: ListView.builder(
-                          itemCount: listaUser.value.length,
-                          itemBuilder: (context, index) {
-                            return Cardlist(
-                              avatar: listaUser.value[index]['avatar'],
-                              username: listaUser.value[index]['username'],
-                              onTap: () => Modular.to.pushNamed(
-                                  '/home/empresa/appointment/',
-                                  arguments: listaUser.value[index]),
-                            );
-                          }),
+                        itemCount: listaUser.value.length,
+                        itemBuilder: (context, index) {
+                          return Cardlist(
+                            avatar: listaUser.value[index]['avatar'],
+                            username: listaUser.value[index]['first_name'],
+                            onTap: () => Modular.to.pushNamed(
+                              '/home/empresa/appointment/',
+                              arguments: listaUser.value[index],
+                            ),
+                          );
+                        },
+                      ),
                     );
             },
           )

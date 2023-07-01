@@ -37,7 +37,7 @@ class HomeRepository {
   Future<Response<dynamic>> getAllWorks() async {
     try {
       final response = await _repository.get(
-        '/auth/signin/employee/allworks',
+        '/admin/worktype/all',
         Options(),
       );
       return response;

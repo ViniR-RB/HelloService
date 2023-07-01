@@ -15,9 +15,9 @@ class ListAppointmentRepository {
       final user = await db.getUser();
       final token = user[0].webtoken;
       final id = user[0].id;
-      final employeeid = {'employeeId': id};
+      final employeeid = {'employee_id': id};
       final response = await _repository.post(
-        '/auth/signin/employee/myappointments',
+        '/auth/signin/employee/home',
         Options(
           headers: {
             HttpHeaders.contentTypeHeader: 'application/json',

@@ -1,5 +1,3 @@
-import 'package:dio/dio.dart';
-
 import 'home_repository.dart';
 
 class HomeController {
@@ -9,7 +7,7 @@ class HomeController {
 
   Future<dynamic> listAllEmployeer() async {
     try {
-      final Response<dynamic> response = await repository.listAllEmployeer();
+      final response = await repository.listAllEmployeer();
 
       return response.data;
     } catch (e) {

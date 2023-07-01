@@ -28,7 +28,7 @@ class AuthRepositoryImpl implements AuthRepository {
       return response;
     } on DioError catch (e) {
       throw AuthErrorLogin(
-        message: e.response!.data['msg'],
+        message: e.response?.data['msg'],
         statusCode: e.response?.statusCode ?? 0,
       );
     }

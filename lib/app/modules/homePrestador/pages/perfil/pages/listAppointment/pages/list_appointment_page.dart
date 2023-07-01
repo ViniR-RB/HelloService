@@ -25,6 +25,7 @@ class _ListAppointmentPageState extends State<ListAppointmentPage> {
 
   listAllAppointment() async {
     appointmentList.value = await _controller.listAllAppointment();
+    print(appointmentList.value);
   }
 
   @override
