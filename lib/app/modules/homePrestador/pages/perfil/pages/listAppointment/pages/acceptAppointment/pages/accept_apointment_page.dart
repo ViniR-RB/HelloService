@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../../../../../../core/widgets/snackbar_custom.dart';
 import '../accept_apointment_controller.dart';
 
 class AcceptAppointmentPage extends StatefulWidget {
@@ -24,30 +25,22 @@ class _AcceptAppointmentPageState extends State<AcceptAppointmentPage> {
     return Scaffold(body: _body(data, hours));
   }
 
-  Future<ScaffoldFeatureController<SnackBar, SnackBarClosedReason>>
-      _agreeappointment() async {
+  Future<void> _agreeappointment() async {
     try {
       await _controller.agreeappointment(word['appointment'][0]['id']);
-      final snackBar = SnackBar(
-        content: const Text('Trabalho Aceito com Sucesso'),
-        action: SnackBarAction(
-          label: 'Continuar',
-          onPressed: () {},
-        ),
-      );
+
       Modular.to.pop();
-      return ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      CustomSnackBar(
+        content: 'Trabalho Aceito com Sucesso',
+        label: 'Continuar',
+        onTap: () {},
+      ).showSnackBar();
     } catch (e) {
-      final snackBar = SnackBar(
-        content: const Text('Algum Erro Inesperado,tente novamente mais tarde'),
-        action: SnackBarAction(
-          label: 'Continuar',
-          onPressed: () {
-            return Modular.to.pop();
-          },
-        ),
-      );
-      return ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      CustomSnackBar(
+        content: 'Algum Erro Inesperado,tente novamente mais tarde',
+        label: 'Continuar',
+        onTap: () {},
+      ).showSnackBar();
     }
   }
 

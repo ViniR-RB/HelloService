@@ -4,6 +4,7 @@ import 'package:rx_notifier/rx_notifier.dart';
 
 import '../../../../../core/db/db.dart';
 import '../../../../../core/models/user.dart';
+import '../../../../../core/widgets/custom_app_bar.dart';
 
 class PerfilEmpresaPage extends StatefulWidget {
   const PerfilEmpresaPage({super.key});
@@ -31,7 +32,7 @@ class _PerfilEmpresaPageState extends State<PerfilEmpresaPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(32, 32, 32, 1),
-      appBar: AppBar(
+      appBar: AppBarCustom(
         actions: [
           GestureDetector(
             onTap: _logout,
@@ -53,15 +54,6 @@ class _PerfilEmpresaPageState extends State<PerfilEmpresaPage> {
         leading: Image.asset(
           'assets/logo/logo.png',
           scale: 1.5,
-        ),
-        title: const Text(
-          'Meu Perfil',
-          style: TextStyle(
-            fontSize: 20,
-            fontFamily: 'MavenPro',
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
         ),
       ),
       body: _body(),

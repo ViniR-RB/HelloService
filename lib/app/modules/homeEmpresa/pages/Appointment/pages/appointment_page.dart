@@ -3,6 +3,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart';
 import 'package:rx_notifier/rx_notifier.dart';
 
+import '../../../../../core/widgets/snackbar_custom.dart';
 import '../appointment_controller.dart';
 
 class AppointmentPage extends StatefulWidget {
@@ -42,18 +43,15 @@ class _AppointmentPageState extends State<AppointmentPage> {
     return Scaffold(body: _body());
   }
 
-  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> _sendAppointment() {
+  void _sendAppointment() {
     if (_worktypeController.text.isEmpty ||
         hour.value.isEmpty ||
         minute.value.isEmpty) {
-      final snackBar = SnackBar(
-        content: const Text('Preencha os Dados que estão faltando'),
-        action: SnackBarAction(
-          label: 'Continuar',
-          onPressed: () {},
-        ),
-      );
-      return ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      CustomSnackBar(
+        content: 'Preencha os Dados que estão faltando',
+        label: 'Continuar',
+        onTap: () {},
+      ).showSnackBar();
     } else {
       try {
         _controller.createAppointment(
@@ -63,24 +61,18 @@ class _AppointmentPageState extends State<AppointmentPage> {
           minute.value,
           word['id'],
         );
-        final snackBar = SnackBar(
-          content: const Text('Contrato Criado'),
-          action: SnackBarAction(
-            label: 'Continuar',
-            onPressed: () {},
-          ),
-        );
+        CustomSnackBar(
+          content: 'Contrato Criado',
+          label: 'Continuar',
+          onTap: () {},
+        ).showSnackBar();
         Modular.to.pop();
-        return ScaffoldMessenger.of(context).showSnackBar(snackBar);
       } catch (e) {
-        final snackBar = SnackBar(
-          content: const Text('Algum erro inesperado'),
-          action: SnackBarAction(
-            label: 'Continuar',
-            onPressed: () {},
-          ),
-        );
-        return ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        CustomSnackBar(
+          content: 'Algum erro inesperado',
+          label: 'Continuar',
+          onTap: () {},
+        ).showSnackBar();
       }
     }
   }
@@ -144,77 +136,83 @@ class _AppointmentPageState extends State<AppointmentPage> {
               if (work_provider.value.isEmpty)
                 Container()
               else
-                Text('Horario de Inicio'),
+                const Text('Horario de Inicio'),
               if (work_provider.value.isEmpty)
                 Container()
               else
                 Row(
                   children: [
                     Container(
-                      child: Row(children: [
-                        IconButton(
-                          icon: Icon(Icons.date_range),
-                          onPressed: () async {
-                            var data = await showDatePicker(
+                      child: Row(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.date_range),
+                            onPressed: () async {
+                              final data = await showDatePicker(
                                 context: context,
                                 initialDate: DateTime.now(),
                                 firstDate: DateTime(2022),
                                 lastDate: DateTime(2023),
-                                locale: Localizations.localeOf(context));
-                            if (data != null) {
-                              datapt.value =
-                                  DateFormat(DateFormat.YEAR_MONTH_DAY, 'pt-Br')
-                                      .format(data);
-                              date.value = data;
-                            }
-                          },
-                        ),
-                        Text(datapt.value)
-                      ]),
+                                locale: Localizations.localeOf(context),
+                              );
+                              if (data != null) {
+                                datapt.value = DateFormat(
+                                  DateFormat.YEAR_MONTH_DAY,
+                                  'pt-Br',
+                                ).format(data);
+                                date.value = data;
+                              }
+                            },
+                          ),
+                          Text(datapt.value)
+                        ],
+                      ),
                     ),
                     Container(
-                      child: Row(children: [
-                        IconButton(
-                          icon: Icon(Icons.access_time),
-                          onPressed: () async {
-                            final time = (await showTimePicker(
-                              context: context,
-                              initialTime: TimeOfDay.now(),
-                            ));
-                            if (time != null) {
-                              if (time.hour == 0 ||
-                                  time.hour == 1 ||
-                                  time.hour == 2 ||
-                                  time.hour == 3 ||
-                                  time.hour == 4 ||
-                                  time.hour == 5 ||
-                                  time.hour == 6 ||
-                                  time.hour == 7 ||
-                                  time.hour == 8 ||
-                                  time.hour == 9) {
-                                hour.value = '0${time.hour.toString()}';
-                              } else {
-                                hour.value = time.hour.toString();
+                      child: Row(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.access_time),
+                            onPressed: () async {
+                              final time = await showTimePicker(
+                                context: context,
+                                initialTime: TimeOfDay.now(),
+                              );
+                              if (time != null) {
+                                if (time.hour == 0 ||
+                                    time.hour == 1 ||
+                                    time.hour == 2 ||
+                                    time.hour == 3 ||
+                                    time.hour == 4 ||
+                                    time.hour == 5 ||
+                                    time.hour == 6 ||
+                                    time.hour == 7 ||
+                                    time.hour == 8 ||
+                                    time.hour == 9) {
+                                  hour.value = '0${time.hour.toString()}';
+                                } else {
+                                  hour.value = time.hour.toString();
+                                }
+                                if (time.minute == 0 ||
+                                    time.minute == 1 ||
+                                    time.minute == 2 ||
+                                    time.minute == 3 ||
+                                    time.minute == 4 ||
+                                    time.minute == 5 ||
+                                    time.minute == 6 ||
+                                    time.minute == 7 ||
+                                    time.minute == 8 ||
+                                    time.minute == 9) {
+                                  minute.value = '0${time.minute.toString()}';
+                                } else {
+                                  minute.value = time.minute.toString();
+                                }
                               }
-                              if (time.minute == 0 ||
-                                  time.minute == 1 ||
-                                  time.minute == 2 ||
-                                  time.minute == 3 ||
-                                  time.minute == 4 ||
-                                  time.minute == 5 ||
-                                  time.minute == 6 ||
-                                  time.minute == 7 ||
-                                  time.minute == 8 ||
-                                  time.minute == 9) {
-                                minute.value = '0${time.minute.toString()}';
-                              } else {
-                                minute.value = time.minute.toString();
-                              }
-                            }
-                          },
-                        ),
-                        Text('${hour.value}:${minute.value}')
-                      ]),
+                            },
+                          ),
+                          Text('${hour.value}:${minute.value}')
+                        ],
+                      ),
                     )
                   ],
                 ),

@@ -55,8 +55,8 @@ class AuthControllerImpl implements AuthController {
         return user;
       }
     } on AuthErrorLogin catch (e) {
-      ShowSnackBarError(content: e.message, label: 'Continuar', onTap: () {})
-          .showSnackBar(context);
+      CustomSnackBar(content: e.message, label: 'Continuar', onTap: () {})
+          .showSnackBar();
       return null;
     }
   }
