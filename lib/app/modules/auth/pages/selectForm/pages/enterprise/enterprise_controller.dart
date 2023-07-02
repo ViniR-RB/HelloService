@@ -36,8 +36,8 @@ class EnterpriseController {
       }
       return users;
     } on EnterPriseErrorEmailAlreadyExisting catch (e) {
-      ShowSnackBarError(content: e.message, label: 'Continuar', onTap: () {})
-          .showSnackBar(context);
+      CustomSnackBar(content: e.message, label: 'Continuar', onTap: () {})
+          .showSnackBar();
     }
     return null;
   }

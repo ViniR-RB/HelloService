@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 
-class ShowSnackBarError {
+class CustomSnackBar {
   final String content;
   final String label;
   void Function() onTap;
-  ShowSnackBarError({
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
+      GlobalKey<ScaffoldMessengerState>();
+  CustomSnackBar({
     required this.content,
     required this.label,
     required this.onTap,
   });
 
-  void showSnackBar(BuildContext context) {
+  void showSnackBar() {
     final snackBar = SnackBar(
       content: Text(content),
       action: SnackBarAction(
@@ -18,6 +20,7 @@ class ShowSnackBarError {
         onPressed: onTap,
       ),
     );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+    _scaffoldKey.currentState?.showSnackBar(snackBar);
   }
 }

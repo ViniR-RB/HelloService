@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:rx_notifier/rx_notifier.dart';
 
+import '../../../core/widgets/custom_app_bar.dart';
+import '../../../core/widgets/snackbar_custom.dart';
 import '../home_controller.dart';
 
 class HomePrestadorPage extends StatefulWidget {
@@ -21,21 +23,18 @@ class _HomePageState extends State<HomePrestadorPage> {
     getEmployeers();
   }
 
-  getEmployeers() async {
+  Future<void> getEmployeers() async {
     try {
       workList.value = await _controller.getAllWorks();
     } catch (e) {
-      final snackBar = SnackBar(
-        content: const Text('Token Inválido'),
-        action: SnackBarAction(
+      if (mounted) {
+        CustomSnackBar(
+          content: 'Token Inválido',
           label: 'Continuar',
-          onPressed: () {
+          onTap: () {
             return Modular.to.navigate('/auth');
           },
-        ),
-      );
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        ).showSnackBar();
       }
     }
   }
@@ -61,17 +60,14 @@ class _HomePageState extends State<HomePrestadorPage> {
                 textStyle: Theme.of(context).textTheme.labelLarge,
               ),
               child: const Text('Sim,Quero'),
-              onPressed: () async {
+              onPressed: () {
                 _controller.addwork(worktype);
                 Modular.to.pop();
-                final snackBar = SnackBar(
-                  content: const Text('Trabalho Adicionado com Sucesso'),
-                  action: SnackBarAction(
-                    label: 'Continuar',
-                    onPressed: () {},
-                  ),
-                );
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                CustomSnackBar(
+                  content: 'Trabalho Adicionado com Sucesso',
+                  label: 'Continuar',
+                  onTap: () {},
+                ).showSnackBar();
               },
             ),
           ],
@@ -85,7 +81,7 @@ class _HomePageState extends State<HomePrestadorPage> {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBarCustom(
         actions: [
           IconButton(
             onPressed: () => Modular.to.pushNamed('/home/prestador/perfil/'),
@@ -99,15 +95,6 @@ class _HomePageState extends State<HomePrestadorPage> {
         leading: Image.asset(
           'assets/logo/logo.png',
           scale: 1.5,
-        ),
-        title: const Text(
-          'HelloService',
-          style: TextStyle(
-            fontSize: 20,
-            fontFamily: 'MavenPro',
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
         ),
       ),
       body: _body(height, width),

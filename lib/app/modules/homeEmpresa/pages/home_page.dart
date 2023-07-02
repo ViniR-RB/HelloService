@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:rx_notifier/rx_notifier.dart';
 
+import '../../../core/widgets/custom_app_bar.dart';
+import '../../../core/widgets/snackbar_custom.dart';
 import '../../homePrestador/widgets/card.dart';
 import '../home_controller.dart';
 
@@ -26,52 +28,32 @@ class _HomePageState extends State<HomeEmpresaPage> {
     try {
       _controller.listAllEmployeer().then((value) => listaUser.value = value);
     } catch (e) {
-      final snackBar = SnackBar(
-        content: const Text('Token Inválido'),
-        action: SnackBarAction(
-          label: 'Continuar',
-          onPressed: () {
-            return Modular.to.navigate('/auth');
-          },
-        ),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      final snackBar = CustomSnackBar(
+        content: 'Token Inválido',
+        label: 'Continuar',
+        onTap: () {
+          return Modular.to.navigate('/auth');
+        },
+      ).showSnackBar();
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _appBar(),
+      appBar: AppBarCustom(
+        actions: [
+          IconButton(
+            onPressed: () =>
+                Modular.to.pushNamed('/home/empresa/perfilempresa'),
+            icon: const Icon(
+              Icons.settings,
+              color: Colors.black,
+            ),
+          )
+        ],
+      ),
       body: _body(),
-    );
-  }
-
-  AppBar _appBar() {
-    return AppBar(
-      actions: [
-        IconButton(
-          onPressed: () => Modular.to.pushNamed('/home/empresa/perfilempresa'),
-          icon: const Icon(
-            Icons.settings,
-            color: Colors.black,
-          ),
-        )
-      ],
-      backgroundColor: const Color.fromRGBO(249, 238, 47, 1),
-      leading: Image.asset(
-        'assets/logo/logo.png',
-        scale: 1.5,
-      ),
-      title: const Text(
-        'HelloService',
-        style: TextStyle(
-          fontSize: 20,
-          fontFamily: 'MavenPro',
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
     );
   }
 
