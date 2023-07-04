@@ -43,7 +43,7 @@ class _PerfilPageState extends State<PerfilPage> {
                   color: Colors.black,
                 ),
                 Text(
-                  'Fazer Logout?',
+                  'Logout?',
                   style: TextStyle(color: Colors.black),
                 ),
                 SizedBox(

@@ -30,7 +30,7 @@ class AuthControllerImpl implements AuthController {
 
       final db = DatabaseConnect();
 
-      if (userData['user Type'] == 'enterprise') {
+      if (userData['user_type'] == 'enterprise') {
         final User user = Enterprise.fromMap(userData);
         final userList = await db.getUser();
 
