@@ -15,14 +15,13 @@ class HomeRepository {
     final token = user[0].webtoken;
     try {
       final response = await _repository.get(
-        '/auth/signin/enterprise/home/listalllemployeers',
+        '/auth/signin/enterprise/home',
         Options(
           headers: {
             HttpHeaders.contentTypeHeader: 'application/json',
             HttpHeaders.authorizationHeader: 'Bearer $token'
           },
         ),
-        
       );
       return response;
     } catch (e) {

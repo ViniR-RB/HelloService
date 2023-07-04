@@ -43,7 +43,7 @@ class _PerfilEmpresaPageState extends State<PerfilEmpresaPage> {
                   color: Colors.black,
                 ),
                 Text(
-                  'Deseja Fazer Logout?',
+                  'Logout?',
                   style: TextStyle(color: Colors.black),
                 ),
               ],
@@ -117,7 +117,9 @@ class _PerfilEmpresaPageState extends State<PerfilEmpresaPage> {
             const SizedBox(
               height: 22,
             ),
-            _solicatacoes()
+            _solicatacoes(),
+            const SizedBox(height: 22),
+            _confirmedArrived()
           ],
         );
       },
@@ -243,6 +245,48 @@ class _PerfilEmpresaPageState extends State<PerfilEmpresaPage> {
               ),
               Text(
                 'Veja Suas Solicitações',
+                style: TextStyle(
+                  fontFamily: 'MavenPro',
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const Padding(
+            padding: EdgeInsets.only(left: 12),
+            child: Icon(
+              Icons.keyboard_arrow_right,
+              size: 30,
+              color: Color.fromRGBO(82, 163, 208, 1),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container _confirmedArrived() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 50),
+      child: Row(
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(right: 20),
+            child: Icon(
+              size: 32,
+              Icons.approval_outlined,
+              color: Colors.white,
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Text(
+                'Confirmar chegada',
+                style: TextStyle(fontFamily: 'MavenPro', color: Colors.grey),
+              ),
+              Text(
+                'Seu contratado chegou?',
                 style: TextStyle(
                   fontFamily: 'MavenPro',
                   fontWeight: FontWeight.bold,
