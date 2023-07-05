@@ -106,6 +106,7 @@ class _HomePageState extends State<HomeEmpresaPage> {
                   'Lista de Funcionários Disponíveis',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
+                SizedBox(height: 20.0),
                 Row(
                   children: [
                     Expanded(
@@ -116,7 +117,19 @@ class _HomePageState extends State<HomeEmpresaPage> {
                           });
                         },
                         decoration: InputDecoration(
-                          labelText: 'Digite um filtro',
+                          labelText: 'Pesquise um usuário',
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color.fromARGB(255, 63, 0, 209),
+                                width: 1.0),
+                          ),
+                          enabledBorder: const OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 193, 193, 193),
+                                width: 2.0),
+                          ),
+                          labelStyle: TextStyle(
+                              color: Color.fromARGB(255, 255, 255, 255)),
                         ),
                       ),
                     ),
@@ -136,7 +149,7 @@ class _HomePageState extends State<HomeEmpresaPage> {
           Visibility(
             visible: _isButtonsVisible,
             child: SizedBox(
-              height: 200, // Defina a altura desejada
+              height: 50, // Defina a altura desejada
               child: ListView.builder(
                 scrollDirection: Axis
                     .horizontal, // Defina a direção do scroll como horizontal
@@ -178,6 +191,7 @@ class _HomePageState extends State<HomeEmpresaPage> {
               ),
             ),
           ),
+          SizedBox(height: 20.0),
           RxBuilder(
             builder: (context) {
               return listaUser.value.isEmpty
