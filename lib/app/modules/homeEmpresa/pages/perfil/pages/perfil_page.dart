@@ -5,6 +5,7 @@ import 'package:rx_notifier/rx_notifier.dart';
 import '../../../../../core/db/db.dart';
 import '../../../../../core/models/user.dart';
 import '../../../../../core/widgets/custom_app_bar.dart';
+import 'confirm_arrival/pages/confirm_arrival_page.dart';
 
 class PerfilEmpresaPage extends StatefulWidget {
   const PerfilEmpresaPage({super.key});
@@ -265,44 +266,50 @@ class _PerfilEmpresaPageState extends State<PerfilEmpresaPage> {
     );
   }
 
-  Container _confirmedArrived() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 50),
-      child: Row(
-        children: [
-          const Padding(
-            padding: EdgeInsets.only(right: 20),
-            child: Icon(
-              size: 32,
-              Icons.approval_outlined,
-              color: Colors.white,
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(
-                'Confirmar chegada',
-                style: TextStyle(fontFamily: 'MavenPro', color: Colors.grey),
+  _confirmedArrived() {
+    return GestureDetector(
+      onTap: () => Modular.to.pushNamed(
+        '/home/empresa/perfilempresa/confirm_arrival',
+        arguments: user,
+      ),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 50),
+        child: Row(
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(right: 20),
+              child: Icon(
+                size: 32,
+                Icons.approval_outlined,
+                color: Colors.white,
               ),
-              Text(
-                'Seu contratado chegou?',
-                style: TextStyle(
-                  fontFamily: 'MavenPro',
-                  fontWeight: FontWeight.bold,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Text(
+                  'Confirmar chegada',
+                  style: TextStyle(fontFamily: 'MavenPro', color: Colors.grey),
                 ),
-              ),
-            ],
-          ),
-          const Padding(
-            padding: EdgeInsets.only(left: 12),
-            child: Icon(
-              Icons.keyboard_arrow_right,
-              size: 30,
-              color: Color.fromRGBO(82, 163, 208, 1),
+                Text(
+                  'Seu contratado chegou?',
+                  style: TextStyle(
+                    fontFamily: 'MavenPro',
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
+            const Padding(
+              padding: EdgeInsets.only(left: 12),
+              child: Icon(
+                Icons.keyboard_arrow_right,
+                size: 30,
+                color: Color.fromRGBO(82, 163, 208, 1),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
