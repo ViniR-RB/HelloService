@@ -57,16 +57,50 @@ class _HomePageState extends State<HomeEmpresaPage> {
     );
   }
 
+  String filtro = '';
+
   SingleChildScrollView _body() {
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            margin: const EdgeInsets.fromLTRB(0, 12, 0, 0),
-            child: const Text(
-              'Lista de Funcionários Disponíveis',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            margin: const EdgeInsets.fromLTRB(10, 12, 10, 30),
+            child: Column(
+              children: [
+                const Text(
+                  'Lista de Funcionários Disponíveis',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+               
+                
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        onChanged: (value) {
+                          setState(() {
+                            filtro = value.toLowerCase();
+                          });
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'Digite um filtro',
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          filtro = '';
+                        });
+                      },
+                      icon: Icon(Icons.clear),
+                    ),
+                  ],
+                ),
+
+                
+              ],
             ),
           ),
           RxBuilder(
@@ -78,6 +112,13 @@ class _HomePageState extends State<HomeEmpresaPage> {
                       child: ListView.builder(
                         itemCount: listaUser.value.length,
                         itemBuilder: (context, index) {
+                          final user = listaUser.value[index];
+                          final username = user['first_name'].toLowerCase();
+
+                          if (filtro.isNotEmpty && !username.contains(filtro)) {
+                            return SizedBox
+                                .shrink(); // Ignora o item se não corresponder ao filtro
+                          }
                           return Cardlist(
                             avatar: listaUser.value[index]['avatar'],
                             username: listaUser.value[index]['first_name'],
