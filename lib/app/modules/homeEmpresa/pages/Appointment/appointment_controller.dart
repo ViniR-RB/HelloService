@@ -19,8 +19,10 @@ class AppointmentController {
         minute,
         employeerId,
       );
+      print('Dados enviados no controller: ${response.data}');
       return response.data;
     } catch (e) {
+      print('Erro no controller createAppointment $e');
       throw Exception(e);
     }
   }

@@ -16,7 +16,7 @@ class AppointmentPage extends StatefulWidget {
 class _AppointmentPageState extends State<AppointmentPage> {
   var word = Modular.args.data;
   RxNotifier<bool> checked = RxNotifier(false);
-  RxNotifier<List<dynamic>> work_provider = RxNotifier([]);
+  // RxNotifier<List<dynamic>> work_provider = RxNotifier([]);
   final TextEditingController _worktypeController = TextEditingController();
   RxNotifier<String> datapt = RxNotifier('');
   RxNotifier<String> hour = RxNotifier('');
@@ -27,6 +27,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
   @override
   void initState() {
     super.initState();
+    print(word);
     /* getWork(); */
   }
 
@@ -52,6 +53,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
         label: 'Continuar',
         onTap: () {},
       ).showSnackBar();
+      print('Deu algum erro nos dados necessários.');
     } else {
       try {
         _controller.createAppointment(
@@ -61,6 +63,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
           minute.value,
           word['id'],
         );
+        print('Enviou para o repositorio.');
         CustomSnackBar(
           content: 'Contrato Criado',
           label: 'Continuar',
@@ -81,7 +84,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
     return RxBuilder(
       builder: (context) {
         return Container(
-          height: work_provider.value.isEmpty
+          height: word['workTypes'].isEmpty
               ? MediaQuery.of(context).size.height * .60
               : MediaQuery.of(context).size.height * .80,
           width: MediaQuery.of(context).size.width,
@@ -129,15 +132,15 @@ class _AppointmentPageState extends State<AppointmentPage> {
               ),
               SizedBox(
                 height: 80,
-                child: work_provider.value.isEmpty
+                child: word['workTypes'].isEmpty
                     ? const Text('Esse Usuario Não Pode Ser Chamado')
                     : workTypeDropdown(),
               ),
-              if (work_provider.value.isEmpty)
+              if (word['workTypes'].isEmpty)
                 Container()
               else
                 const Text('Horario de Inicio'),
-              if (work_provider.value.isEmpty)
+              if (word['workTypes'].isEmpty)
                 Container()
               else
                 Row(
@@ -152,7 +155,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                 context: context,
                                 initialDate: DateTime.now(),
                                 firstDate: DateTime(2022),
-                                lastDate: DateTime(2023),
+                                lastDate: DateTime(2023, 12, 31),
                                 locale: Localizations.localeOf(context),
                               );
                               if (data != null) {
@@ -216,7 +219,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                     )
                   ],
                 ),
-              if (work_provider.value.isEmpty)
+              if (word['workTypes'].isEmpty)
                 Container()
               else
                 Row(
@@ -276,11 +279,11 @@ class _AppointmentPageState extends State<AppointmentPage> {
           _worktypeController.text,
           style: TextStyle(color: Theme.of(context).primaryColor),
         ),
-        items: word['work'].value.map((name) {
-          return DropdownMenuItem<dynamic>(
-            value: name,
+        items: word['workTypes'].map<DropdownMenuItem<Object>>((work) {
+          return DropdownMenuItem<Object>(
+            value: work,
             child: Text(
-              name['profession'],
+              work['work'], // exibe o nome do work, por exemplo: motoboy
               style: Theme.of(context).textTheme.titleSmall,
             ),
           );
