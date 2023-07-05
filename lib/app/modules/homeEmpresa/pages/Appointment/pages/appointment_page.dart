@@ -53,6 +53,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
         label: 'Continuar',
         onTap: () {},
       ).showSnackBar();
+      print('Deu algum erro nos dados necessários.');
     } else {
       try {
         _controller.createAppointment(
@@ -62,6 +63,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
           minute.value,
           word['id'],
         );
+        print('Enviou para o repositorio.');
         CustomSnackBar(
           content: 'Contrato Criado',
           label: 'Continuar',
@@ -153,7 +155,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                 context: context,
                                 initialDate: DateTime.now(),
                                 firstDate: DateTime(2022),
-                                lastDate: DateTime(2023),
+                                lastDate: DateTime(2023, 12, 31),
                                 locale: Localizations.localeOf(context),
                               );
                               if (data != null) {

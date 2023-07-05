@@ -18,7 +18,9 @@ class _AcceptAppointmentPageState extends State<AcceptAppointmentPage> {
 
   @override
   Widget build(BuildContext context) {
-    final date = DateTime.parse('${word['appointment'][0]['expected_start']}');
+    Type wordType = word.runtimeType;
+    print('Saber o tipo do word: $wordType');
+    final date = DateTime.parse(word['expected_start']);
     final data = DateFormat(DateFormat.YEAR_MONTH_DAY, 'pt-Br').format(date);
     final hours =
         DateFormat(DateFormat.HOUR24_MINUTE_SECOND, 'pt-BR').format(date);
@@ -27,7 +29,7 @@ class _AcceptAppointmentPageState extends State<AcceptAppointmentPage> {
 
   Future<void> _agreeappointment() async {
     try {
-      await _controller.agreeappointment(word['appointment'][0]['id']);
+      await _controller.agreeappointment(word['id']);
 
       Modular.to.pop();
       CustomSnackBar(
