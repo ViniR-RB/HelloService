@@ -17,16 +17,50 @@ class HomeEmpresaPage extends StatefulWidget {
 class _HomePageState extends State<HomeEmpresaPage> {
   final HomeController _controller = Modular.get();
   RxNotifier<List<dynamic>> listaUser = RxNotifier([]);
+  List<dynamic> workList = [];
+  late bool _isButtonsVisible = false;
 
   @override
   void initState() {
     super.initState();
     getEmployeers();
+    getJobs();
+  }
+
+  Future<void> getJobs() async {
+    try {
+      workList = await _controller.getAllWorks();
+    } catch (e) {
+      if (mounted) {
+        CustomSnackBar(
+          content: 'Token Inválido',
+          label: 'Continuar',
+          onTap: () {
+            return Modular.to.navigate('/auth');
+          },
+        ).showSnackBar();
+      }
+    }
+  }
+
+  getFilterWorks(String work) {
+    try {
+      _controller.filterWorks(work).then((value) => listaUser.value = value);
+    } catch (e) {
+      final snackBar = CustomSnackBar(
+        content: 'Token Inválido',
+        label: 'Continuar',
+        onTap: () {
+          return Modular.to.navigate('/auth');
+        },
+      ).showSnackBar();
+    }
   }
 
   getEmployeers() {
     try {
       _controller.listAllEmployeer().then((value) => listaUser.value = value);
+      print(listaUser.value);
     } catch (e) {
       final snackBar = CustomSnackBar(
         content: 'Token Inválido',
@@ -72,8 +106,6 @@ class _HomePageState extends State<HomeEmpresaPage> {
                   'Lista de Funcionários Disponíveis',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-               
-                
                 Row(
                   children: [
                     Expanded(
@@ -91,16 +123,59 @@ class _HomePageState extends State<HomeEmpresaPage> {
                     IconButton(
                       onPressed: () {
                         setState(() {
-                          filtro = '';
+                          _isButtonsVisible = !_isButtonsVisible;
                         });
                       },
-                      icon: Icon(Icons.clear),
+                      icon: Icon(Icons.filter_alt_outlined),
                     ),
                   ],
                 ),
-
-                
               ],
+            ),
+          ),
+          Visibility(
+            visible: _isButtonsVisible,
+            child: SizedBox(
+              height: 200, // Defina a altura desejada
+              child: ListView.builder(
+                scrollDirection: Axis
+                    .horizontal, // Defina a direção do scroll como horizontal
+
+                itemCount: workList.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      getFilterWorks(workList[index]['work']);
+                    },
+                    child: Container(
+                      width: 100,
+                      height: 10, // Defina a largura desejada para cada botão
+                      decoration: BoxDecoration(
+                        color: Colors.indigo,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromARGB(136, 237, 225, 225),
+                            blurRadius: 4,
+                            offset: Offset(0, 0.75),
+                          ),
+                        ],
+                      ),
+                      margin: const EdgeInsets.all(
+                          8), // Adicione algum espaçamento entre os botões
+                      child: Center(
+                        child: Text(
+                          workList[index]['work'],
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ),
           RxBuilder(
@@ -131,7 +206,7 @@ class _HomePageState extends State<HomeEmpresaPage> {
                       ),
                     );
             },
-          )
+          ),
         ],
       ),
     );
