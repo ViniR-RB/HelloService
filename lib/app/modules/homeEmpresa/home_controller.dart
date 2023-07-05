@@ -14,4 +14,23 @@ class HomeController {
       throw Exception(e);
     }
   }
+
+  Future<dynamic> filterWorks(String work) async {
+    try {
+      final response = await repository.filterWorks(work);
+      print(response.data[0]['employees']);
+      return response.data[0]['employees'];
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<dynamic> getAllWorks() async {
+    try {
+      final response = await repository.getAllWorks();
+      return response.data;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 }
