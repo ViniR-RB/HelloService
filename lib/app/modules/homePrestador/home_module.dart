@@ -1,5 +1,6 @@
 import 'package:app/app/modules/homePrestador/home_controller.dart';
 import 'package:app/app/modules/homePrestador/home_repository.dart';
+import 'package:app/app/modules/homePrestador/pages/editperfil/edit_perfil_module.dart';
 import 'package:app/app/modules/homePrestador/pages/perfil/perfil_module.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -19,5 +20,6 @@ class HomePrestadorModule extends Module {
       child: (_, args) => const HomePrestadorPage(),
     ),
     ModuleRoute('/perfil', module: PerfilModule()),
+    ModuleRoute('/edit', module: EditEmployeeModule()),
   ];
 }

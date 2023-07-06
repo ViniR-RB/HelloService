@@ -114,7 +114,19 @@ class _PerfilPageState extends State<PerfilPage> {
               ),
             ),
             const SizedBox(
-              height: 52,
+              height: 22,
+            ),
+            ElevatedButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Editar Perfil'),
+              onPressed: () {
+                Modular.to.pushNamed('/home/prestador/edit');
+              },
+            ),
+            const SizedBox(
+              height: 22,
             ),
             _nome(user.value.username, 'Nome'),
             const SizedBox(

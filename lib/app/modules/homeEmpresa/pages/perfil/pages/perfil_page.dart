@@ -112,7 +112,19 @@ class _PerfilEmpresaPageState extends State<PerfilEmpresaPage> {
               ),
             ),
             const SizedBox(
-              height: 52,
+              height: 25,
+            ),
+            ElevatedButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Editar Perfil'),
+              onPressed: () {
+                Modular.to.pushNamed('/home/empresa/edit');
+              },
+            ),
+            const SizedBox(
+              height: 20,
             ),
             _nome(user.value.username, 'Nome'),
             const SizedBox(

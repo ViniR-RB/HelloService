@@ -24,4 +24,16 @@ class DioHttp implements HttpClient {
 
     return response;
   }
+
+  @override
+  Future<Response> put(
+    String url,
+    Options? options,
+    Map<String, dynamic> data,
+  ) async {
+    final response =
+        await _dio.put(url, options: options, data: jsonEncode(data));
+
+    return response;
+  }
 }

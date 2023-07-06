@@ -10,4 +10,9 @@ abstract class HttpClient {
     Options? options,
     Map<String, dynamic> data,
   );
+  Future<Response<dynamic>> put(
+    String url,
+    Options? options,
+    Map<String, dynamic> data,
+  );
 }
