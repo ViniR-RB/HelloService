@@ -106,7 +106,7 @@ class _HomePageState extends State<HomeEmpresaPage> {
                   'Lista de Funcionários Disponíveis',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 20.0),
+                SizedBox(height: 10.0),
                 Row(
                   children: [
                     Expanded(
@@ -191,7 +191,7 @@ class _HomePageState extends State<HomeEmpresaPage> {
               ),
             ),
           ),
-          SizedBox(height: 20.0),
+          SizedBox(height: 10.0),
           RxBuilder(
             builder: (context) {
               return listaUser.value.isEmpty

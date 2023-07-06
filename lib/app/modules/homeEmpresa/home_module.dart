@@ -3,6 +3,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'home_controller.dart';
 import 'home_repository.dart';
 import 'pages/Appointment/appointment_module.dart';
+import 'pages/editperfil/edit_perfil_module.dart';
 import 'pages/home_page.dart';
 import 'pages/perfil/perfil_module.dart';
 
@@ -21,5 +22,6 @@ class HomeEmpresaModule extends Module {
     ),
     ModuleRoute('/perfilempresa', module: PerfilEmpresaModule()),
     ModuleRoute('/appointment', module: AppointmentModule()),
+    ModuleRoute('/edit', module: EditEnterpriseModule()),
   ];
 }
