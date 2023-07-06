@@ -48,8 +48,8 @@ class AppointmentRepository {
     final appointment = {
       'employeeId': employeerId,
       'worktype': dataworkType,
-      'expected_start': '${date[0]}',
-      'expected_end': '${date[0]}'
+      'expected_start': '${date[0]} ${hour}:${minute}:00',
+      'expected_end': '${date[0]} ${hour}:${minute}:00'
     };
     print('Workype: ${appointment['worktype']}');
     try {
