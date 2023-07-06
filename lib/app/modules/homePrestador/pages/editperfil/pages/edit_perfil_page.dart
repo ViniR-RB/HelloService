@@ -20,7 +20,7 @@ class _FormFactoryPageState extends State<EditEmployeePage> {
 
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _usenameController = TextEditingController();
+  late TextEditingController _usenameController = TextEditingController();
 
   final TextEditingController _firstnameController = TextEditingController();
 
@@ -28,11 +28,11 @@ class _FormFactoryPageState extends State<EditEmployeePage> {
 
   final TextEditingController _passwordController = TextEditingController();
 
-  final TextEditingController _emailController = TextEditingController();
+  late TextEditingController _emailController = TextEditingController();
 
   final TextEditingController _telefoneController = TextEditingController();
 
-  final TextEditingController _cController = TextEditingController();
+  final TextEditingController _cpfController = TextEditingController();
 
   final TextEditingController _cepController = TextEditingController();
 
@@ -69,7 +69,7 @@ class _FormFactoryPageState extends State<EditEmployeePage> {
         'zip_code': _cepController.value.text,
         'state': _estadoController.value.text,
         'cyte': _cidadeController.value.text,
-        'cpf': _cController.value.text,
+        'cpf': _cpfController.value.text,
       };
 
       final response = await _controller.putUserEnterprise(user);
@@ -83,25 +83,26 @@ class _FormFactoryPageState extends State<EditEmployeePage> {
   Future<void> getUserData() async {
     try {
 // Obtém o ID do usuário
-      userData = await _controller
-          .getUser(); // Obtém a lista completa de dados de usuário
+      userData = await _controller.getUser();
       print(userData);
       //List<Map<String, dynamic>> filteredList =
       //  await userData.where((item) => item['id'] == id).toList();
       setState(() {
         userData = userData;
-        //_usenameController.text = user.value.username;
-        //_firstnameController.text = user.value.firstName;
+        _usenameController = TextEditingController(text: userData['username']);
+        _emailController = TextEditingController(text: userData['email']);
 
-        //_lastnameController.text = user.value.lastName;
-        //_passwordController.text = user.value.password;
-        // _emailController.text = user.value.email;
-        //   _telefoneController.text = user.value.phoneNumber;
-        // _cController.text = user.value.cnpj;
-        //_cepController.text = user.value.zipCode;
-        //_estadoController.text = user.value.state;
-        //_cidadeController.text = user.value.city;
-        //_descripitionController.text = user.value.description;
+        '''        
+        _firstnameController.text = userData['first_name'];
+        _lastnameController.text = userData['last_name'];
+        _passwordController.text = userData['password'];
+        _emailController.text = userData['email'];
+        _telefoneController.text = userData['phone_number'];
+        _cpfController.text = userData['cpf'];
+        _cepController.text = userData['zip_code'];
+        _estadoController.text = userData['state'];
+        _cidadeController.text = userData['city'];
+        _descripitionController.text = userData['description'];''';
       });
       // Realize as operações necessárias com a lista filtrada aqui...
     } catch (e) {
@@ -123,9 +124,11 @@ class _FormFactoryPageState extends State<EditEmployeePage> {
     getUserData();
     db = DatabaseConnect();
     print(userData);
+
     db.getUser().then((value) {
       setState(() {
         user.value = value[0];
+
         //_usenameController.text = user.value.username;
         //_firstnameController.text = user.value.firstName;
 
@@ -133,13 +136,19 @@ class _FormFactoryPageState extends State<EditEmployeePage> {
         //_passwordController.text = user.value.password;
         // _emailController.text = user.value.email;
         //   _telefoneController.text = user.value.phoneNumber;
-        // _cController.text = user.value.cnpj;
+        // _cpfController.text = user.value.cnpj;
         //_cepController.text = user.value.zipCode;
         //_estadoController.text = user.value.state;
         //_cidadeController.text = user.value.city;
         //_descripitionController.text = user.value.description;
       });
     });
+  }
+
+  @override
+  void dispose() {
+    _usenameController.dispose();
+    super.dispose();
   }
 
   @override
@@ -222,9 +231,17 @@ class _FormFactoryPageState extends State<EditEmployeePage> {
                                             ),
                                             // _fields('Segundo Nome:', 'Levi',
                                             //     _lastnameController),
+                                            Text(
+                                              'Longitude: ${_emailController}',
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                fontFamily: 'NeonTubes2',
+                                                color: Colors.white,
+                                              ),
+                                            ),
                                             _fields(
-                                              user.value.username,
-                                              user.value.username,
+                                              'Email',
+                                              _emailController,
                                               _emailController,
                                             ),
                                             _fields(
@@ -234,7 +251,7 @@ class _FormFactoryPageState extends State<EditEmployeePage> {
                                             ),
                                             _fields(
                                               'Celular (com DD):',
-                                              '00 00000-0000',
+                                              _telefoneController,
                                               _telefoneController,
                                             ),
                                             _fields(
@@ -254,8 +271,8 @@ class _FormFactoryPageState extends State<EditEmployeePage> {
                                             ),
                                             _fields(
                                               'CNPJ:',
-                                              'XX.XXX.XXX/0001-XX',
-                                              _cController,
+                                              userData['cpf'],
+                                              _cpfController,
                                             ),
                                             _fields(
                                               'Descrição:',
@@ -320,7 +337,6 @@ class _FormFactoryPageState extends State<EditEmployeePage> {
 
   Container field(
     size,
-    String? Function(String?)? validator,
     controller,
     label,
     hintText,
@@ -331,7 +347,6 @@ class _FormFactoryPageState extends State<EditEmployeePage> {
       height: size.height / 14,
       width: size.width / 1.2,
       child: TextFormField(
-        validator: validator,
         controller: controller,
         keyboardType: textInputType,
         decoration: InputDecoration(
@@ -366,7 +381,6 @@ class _FormFactoryPageState extends State<EditEmployeePage> {
         const Padding(padding: EdgeInsets.only(top: 12)),
         field(
           MediaQuery.of(context).size,
-          (p0) => null,
           controller,
           '$label',
           '$label',
