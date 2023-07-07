@@ -16,30 +16,30 @@ class EditEmployeePage extends StatefulWidget {
 
 class _FormFactoryPageState extends State<EditEmployeePage> {
   final EditEmployeeController _controller = Modular.get();
-  late Map<String, dynamic> userData = {};
+  late List<Map<String, dynamic>> userData;
 
   final _formKey = GlobalKey<FormState>();
 
   late TextEditingController _usenameController = TextEditingController();
 
-  final TextEditingController _firstnameController = TextEditingController();
+  late TextEditingController _firstnameController = TextEditingController();
 
-  final TextEditingController _lastnameController = TextEditingController();
+  late TextEditingController _lastnameController = TextEditingController();
 
-  final TextEditingController _passwordController = TextEditingController();
+  late TextEditingController _passwordController = TextEditingController();
 
   late TextEditingController _emailController = TextEditingController();
 
-  final TextEditingController _telefoneController = TextEditingController();
+  late TextEditingController _telefoneController = TextEditingController();
 
-  final TextEditingController _cpfController = TextEditingController();
+  late TextEditingController _cpfController = TextEditingController();
 
-  final TextEditingController _cepController = TextEditingController();
+  late TextEditingController _cepController = TextEditingController();
 
-  final TextEditingController _estadoController = TextEditingController();
+  late TextEditingController _estadoController = TextEditingController();
 
-  final TextEditingController _cidadeController = TextEditingController();
-  final TextEditingController _descripitionController = TextEditingController();
+  late TextEditingController _cidadeController = TextEditingController();
+  late TextEditingController _descripitionController = TextEditingController();
 
   late DatabaseConnect db;
 
@@ -82,29 +82,24 @@ class _FormFactoryPageState extends State<EditEmployeePage> {
 
   Future<void> getUserData() async {
     try {
-// Obtém o ID do usuário
       userData = await _controller.getUser();
+      print('test');
       print(userData);
-      //List<Map<String, dynamic>> filteredList =
-      //  await userData.where((item) => item['id'] == id).toList();
       setState(() {
-        userData = userData;
-        _usenameController = TextEditingController(text: userData['username']);
-        _emailController = TextEditingController(text: userData['email']);
-
-        '''        
-        _firstnameController.text = userData['first_name'];
-        _lastnameController.text = userData['last_name'];
-        _passwordController.text = userData['password'];
-        _emailController.text = userData['email'];
-        _telefoneController.text = userData['phone_number'];
-        _cpfController.text = userData['cpf'];
-        _cepController.text = userData['zip_code'];
-        _estadoController.text = userData['state'];
-        _cidadeController.text = userData['city'];
-        _descripitionController.text = userData['description'];''';
+        _firstnameController.text = userData[0]['first_name'].toString();
+        _lastnameController.text = userData[0]['last_name'].toString();
+        _passwordController.text = userData[0]['password'].toString();
+        _emailController.text = userData[0]['email'].toString();
+        _telefoneController.text = userData[0]['phone_number'].toString();
+        _cpfController.text = userData[0]['cpf'].toString();
+        _cepController.text = userData[0]['zip_code'].toString();
+        _estadoController.text = userData[0]['state'].toString();
+        _cidadeController.text = userData[0]['city'].toString();
+        _descripitionController.text = userData[0]['description'].toString();
       });
-      // Realize as operações necessárias com a lista filtrada aqui...
+
+      //return userData;
+      // Realize as operações necessárias com os dados do usuário aqui...
     } catch (e) {
       if (mounted) {
         CustomSnackBar(
@@ -121,34 +116,13 @@ class _FormFactoryPageState extends State<EditEmployeePage> {
   @override
   void initState() {
     super.initState();
-    getUserData();
     db = DatabaseConnect();
-    print(userData);
-
+    getUserData();
     db.getUser().then((value) {
       setState(() {
         user.value = value[0];
-
-        //_usenameController.text = user.value.username;
-        //_firstnameController.text = user.value.firstName;
-
-        //_lastnameController.text = user.value.lastName;
-        //_passwordController.text = user.value.password;
-        // _emailController.text = user.value.email;
-        //   _telefoneController.text = user.value.phoneNumber;
-        // _cpfController.text = user.value.cnpj;
-        //_cepController.text = user.value.zipCode;
-        //_estadoController.text = user.value.state;
-        //_cidadeController.text = user.value.city;
-        //_descripitionController.text = user.value.description;
       });
     });
-  }
-
-  @override
-  void dispose() {
-    _usenameController.dispose();
-    super.dispose();
   }
 
   @override
@@ -216,68 +190,63 @@ class _FormFactoryPageState extends State<EditEmployeePage> {
                                   child: Column(
                                     children: [
                                       Form(
-                                        key: _formKey,
                                         child: Column(
                                           children: [
-                                            _fields(
-                                              'User Name:',
-                                              'User Name',
-                                              _usenameController,
-                                            ),
-                                            _fields(
-                                              'Primeiro Nome:',
-                                              'Matheus',
-                                              _firstnameController,
-                                            ),
-                                            // _fields('Segundo Nome:', 'Levi',
-                                            //     _lastnameController),
-                                            Text(
-                                              'Longitude: ${_emailController}',
-                                              style: TextStyle(
-                                                fontSize: 15,
-                                                fontFamily: 'NeonTubes2',
-                                                color: Colors.white,
+                                            TextFormField(
+                                              controller: _firstnameController,
+                                              decoration: InputDecoration(
+                                                labelText: 'First Name',
                                               ),
                                             ),
-                                            _fields(
-                                              'Email',
-                                              _emailController,
-                                              _emailController,
+                                            TextFormField(
+                                              controller: _lastnameController,
+                                              decoration: InputDecoration(
+                                                labelText: 'Last Name',
+                                              ),
                                             ),
-                                            _fields(
-                                              'Senha',
-                                              '@dsahu3214',
-                                              _passwordController,
+                                      
+                                            TextFormField(
+                                              controller: _emailController,
+                                              decoration: InputDecoration(
+                                                labelText: 'Email',
+                                              ),
                                             ),
-                                            _fields(
-                                              'Celular (com DD):',
-                                              _telefoneController,
-                                              _telefoneController,
+                                            TextFormField(
+                                              controller: _telefoneController,
+                                              decoration: InputDecoration(
+                                                labelText: 'Phone Number',
+                                              ),
                                             ),
-                                            _fields(
-                                              'Cep:',
-                                              '00000-000',
-                                              _cepController,
+                                            TextFormField(
+                                              controller: _cpfController,
+                                              decoration: InputDecoration(
+                                                labelText: 'CPF',
+                                              ),
                                             ),
-                                            _fields(
-                                              'Estado:',
-                                              'Piaui',
-                                              _estadoController,
+                                            TextFormField(
+                                              controller: _cepController,
+                                              decoration: InputDecoration(
+                                                labelText: 'CEP',
+                                              ),
                                             ),
-                                            _fields(
-                                              'Cidade:',
-                                              'Teresina',
-                                              _cidadeController,
+                                            TextFormField(
+                                              controller: _estadoController,
+                                              decoration: InputDecoration(
+                                                labelText: 'Estado',
+                                              ),
                                             ),
-                                            _fields(
-                                              'CNPJ:',
-                                              userData['cpf'],
-                                              _cpfController,
+                                            TextFormField(
+                                              controller: _cidadeController,
+                                              decoration: InputDecoration(
+                                                labelText: 'City',
+                                              ),
                                             ),
-                                            _fields(
-                                              'Descrição:',
-                                              'Focado, Determinando',
-                                              _descripitionController,
+                                            TextFormField(
+                                              controller:
+                                                  _descripitionController,
+                                              decoration: InputDecoration(
+                                                labelText: 'Description',
+                                              ),
                                             ),
                                             Row(
                                               mainAxisAlignment:

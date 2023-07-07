@@ -25,7 +25,6 @@ class EditEmployeeController {
       final db = DatabaseConnect(); // Instância da classe do banco de dados
       final user = await db.getUser();
       final targetId = user[0].id;
-      print(targetId);
       List<Map<String, dynamic>> dataList = List<Map<String, dynamic>>.from(
           response.data); // Converter para List<Map<String, dynamic>>
 
